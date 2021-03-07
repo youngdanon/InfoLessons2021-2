@@ -1,5 +1,6 @@
 from matplotlib import pyplot as plt
 from math import hypot
+import time
 
 first_market = ()
 residents_first_market = ()
@@ -11,10 +12,6 @@ residents_amount_list = []
 
 def dict_sorting_by_values(dict):
     return {k: v for k, v in sorted(dict.items(), key=lambda item: item[1])}
-
-
-def distance(x1, y1, x2, y2):
-    return hypot(x1 - x2, y1 - y2)
 
 
 def check_r_b_amount(db: dict, rad):
@@ -38,27 +35,7 @@ def check_r_b_amount(db: dict, rad):
     buildings_amount_list = list(buildings_amount_dict)
 
 
-# def check_residents_amount(db, rad):
-#     residents_amount_dict = {}
-#     for key, value in db.items():
-#         residents_amount = 0
-#         for elem2 in db.values():
-#             if value != elem2:
-#                 if distance(float(value[0]), float(value[1]), float(elem2[0]), float(elem2[1])) <= rad:
-#                     residents_amount += elem2[2] * 0.7 / 18
-#         residents_amount_dict.update({key: residents_amount})
-#     return dict_sorting_by_values(residents_amount_dict)
-
-
 def read_data(path):
-    """
-    Чтение файла и сохранение в словаре вида: ключ адрес, значения это кортеж (координата Х, коордианата Y, площадь)
-    Пример: {'пр-кт Фатыха Амирхана д 91Б': (5.73063, 11.8712, 2095.0), ... }
-    Args:
-        path (str): путь к файлу
-    Returns:
-        dict: ключ адрес, значение (x, y, площадь)
-    """
     database = {}
     with open("./buildings", encoding="utf-8") as file:
         for line in file:
@@ -70,14 +47,6 @@ def read_data(path):
 def task1(db):
     global first_market
     global residents_first_market
-    """
-    Задача 1
-    Args:
-        db (dict): изначальный датасет словарь, ключ адрес, значение (x, y, площадь)
-        помимо database могут быть любые другие аргументы
-    Returns:
-        list: координаты дома (x, y)
-    """
     check_r_b_amount(db, 0.5)
     first_market = tuple(db[buildings_amount_list[-1]][0:2])
     residents_first_market = tuple(db[residents_amount_list[-1]][0:2])
@@ -85,30 +54,14 @@ def task1(db):
 
 
 def task2(db):
-    """
-    Задача 2
-    Args:
-        db (dict): изначальный датасет словарь, ключ адрес, значение (x, y, площадь)
-        помимо database могут быть любые другие аргументы
-    Returns:
-        list: координаты домов [(x1,y1), (x2,y2) ... (xn,yn)]
-    """
     result_lst = [first_market]
-
     markets_amount = 1
     i = 2
     while markets_amount < 10:
-        try:
-            x_new = db[buildings_amount_list[-i]][0]
-            y_new = db[buildings_amount_list[-i]][1]
-        except:
-            return result_lst
-
-        # print(dist_markets)
+        x_new = db[buildings_amount_list[-i]][0]
+        y_new = db[buildings_amount_list[-i]][1]
         flag = True
         for x, y in result_lst:
-            # dist_markets = distance(x, y, x_new, y_new)
-            # if dist_markets <= 1:
             if hypot(x - x_new, y - y_new) <= 1:
                 flag = False
                 break
@@ -120,31 +73,14 @@ def task2(db):
 
 
 def task3(db):
-    """
-    Задача 3
-    Args:
-        db (dict): изначальный датасет словарь, ключ адрес, значение (x, y, площадь)
-        помимо database могут быть любые другие аргументы
-    Returns:
-        list: координаты домов [(x1,y1), (x2,y2) ... (xn,yn)]
-    """
-
     result_lst = [residents_first_market]
-
     markets_amount = 1
     i = 2
     while markets_amount < 15:
-        try:
-            x_new = db[residents_amount_list[-i]][0]
-            y_new = db[residents_amount_list[-i]][1]
-        except:
-            return result_lst
-
-        # print(dist_markets)
+        x_new = db[residents_amount_list[-i]][0]
+        y_new = db[residents_amount_list[-i]][1]
         flag = True
         for x, y in result_lst:
-            # dist_markets = distance(x, y, x_new, y_new)
-            # if dist_markets <= 1:
             if hypot(x - x_new, y - y_new) <= 1:
                 flag = False
                 break
@@ -156,14 +92,6 @@ def task3(db):
 
 
 def plot(database, best_coords):
-    # print(best_coords)
-    """
-    НЕ МЕНЯТЬ КОД!
-    Отрисовка точек 2D
-    Args:
-        database (dict): изначальный датасет словарь, ключ адрес, значение (x, y, площадь)
-        best_coords (list): для задачи 1 это (x, y), для задачи 2-3 это [(x1,y1), (x2,y2) ... (xn,yn)]
-    """
     plt.close()
     fig, ax = plt.subplots(figsize=(8, 8))
     plt.plot([coord[0] for coord in database.values()],
@@ -187,16 +115,17 @@ def plot(database, best_coords):
 def homework():
     path = "./buildings"
     database = read_data(path)
-
     best_task1 = task1(database)
     plot(database, best_task1)
-
     best_task2 = task2(database)
     plot(database, best_task2)
-    #
     best_task3 = task3(database)
     plot(database, best_task3)
 
 
 if __name__ == '__main__':
+    timer = time.time()
     homework()
+    stop_timer = time.time()
+    timing = stop_timer - timer
+    print(timing)
