@@ -28,7 +28,7 @@ class Unit:
 
 class Warrior(Unit):
     max_health = 100
-    _max_damage = 10
+    _max_damage = 100
     _block_chance = (0, 2, 0)
 
     def __init__(self, name, health=max_health):
@@ -107,7 +107,7 @@ class Game:
                     self.teams_list.pop(t1_index)
                 elif not self.teams_list[t2_index]:
                     self.teams_list.pop(t2_index)
-        return self.teams_list[0][0].name
+        return self.teams_list[0][0].name.split()[0]
 
 
 if __name__ == "__main__":
@@ -115,6 +115,9 @@ if __name__ == "__main__":
     team2 = team_generator(100, "SlAvEs")
     team3 = team_generator(100, "MuRaT")
     team4 = team_generator(100, "kFu")
-    fight = Game([team1, team2, team3, team4])
+    teams = [team1, team2, team3, team4]
+    # fight = Game([team1, team2, team3, team4])
 
+    # teams = [team_generator(2, i) for i in range(100)]  # not working with (1, i)
+    fight = Game(teams)
     print(f"Winner: {fight.battle()}")
