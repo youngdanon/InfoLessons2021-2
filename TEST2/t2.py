@@ -4,16 +4,15 @@ wupaz zoooo wzauuuuuppp ppppuz waz
 zaw upppzwaa uu zwa zwa'''
 
 splitted = inp.split()
-print(splitted)
+alph = ["w", "a", "z", "u", "p"]
 res = []
-for i in splitted:
-    if len(i) > 5:
+for word in splitted:
+    if len(word) > 5:
         flag = True
-        for j in i:
-            if j.lower() in ["w", "a", "z", "u", "p"]:
-                print(j)
+        for letter in alph:
+            if not(letter in word.lower()):
                 flag = False
         if flag:
-            res.append(i)
+            res.append(word)
 
 print(res)
